@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include <queue>
+#include <vector>
 
 using namespace std;
 
@@ -17,12 +17,38 @@ int swa[4096]={0};
 int mp[127]={0};
 int m[2048]={0};
 int iC=0;
-int iLibre=127;
-queue<pair<int,int>> fifoP;
+int iLibre=128;
+vector<pair<int,int>> fifoP;
+
+void liberaProceso(int iP)
+{
+    //Elimina proceso del arreglo
+    int iTam = fifoP.size();
+    cout<< "iTam " << iTam << endl;
+    for(int i=0;i<127;i++)
+    {
+        if(mp[i]==iP)
+        {
+            mp[i]=0;
+        }
+    }
+    /*
+    //Elimina proceso del vector
+    for(int i=0;i<iTam;i++)
+    {
+        if(fifoP[i].first==iP)
+        {
+            cout << "first: " << fifoP[i].first << endl;
+            //fifoP.erase(fifoP.begin() + i-1);
+            //iLibre++;
+        }
+    }*/
+}
+
 
 void imprimirArreglo()
 {
-    for(int i=0;mp[i]!=0;i++)
+    for(int i=0;i<128;i++)
     {
         cout << mp[i] << endl;
     }
@@ -30,13 +56,14 @@ void imprimirArreglo()
 
 void swapFifo(int iN, int iP)
 {
+    int temp;
     iC = ceil(iN/16.0);
     for(int i=0;i<iC;i++)
     {
         if((swa[i]==0)&&iC>0)
         {
-            fifoP.front();
-            swa[i]=iP;
+            temp = fifoP[0].first;
+            swa[i]=temp;
             iC--;
         }
     }
@@ -49,20 +76,20 @@ void colocarProceso(int iN, int iP)
     iC = ceil(iN/16.0);
     if(iLibre >= iC)
     {
+        iLibre -= iC;
         for(int i=0;i<128;i++)
         {
             if(mp[i]==0&&iC>0)
             {
                 mp[i]=iP;
-                fifoP.push(make_pair(iP,i));
+                fifoP.push_back(make_pair(iP,i));
                 iC--;
             }
         }
-        iLibre -= iC;
     }
     else
     {
-        swapFifo(iN,iP);
+        // swapFifo(iN,iP);
     }
 }
 
@@ -95,6 +122,7 @@ void iniciarArchivo()
         if(cOpc=='L')
         {
             archivoLeer >> iP;
+            liberaProceso(iP);
         }
         if(cOpc=='F')
         {
