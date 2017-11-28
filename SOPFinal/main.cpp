@@ -108,25 +108,33 @@ void iniciarArchivo()
         {
             getline(archivoLeer,sReplica);
             cout << sReplica << endl;
+            
         }
         if(cOpc=='P')
         {
             archivoLeer >> iN >> iP;
+            cout << "P " << iN << " " << iP << endl;
+            cout << "Asignar " << iN << " bytes al proceso " << iP << endl;
             colocarProceso(iN, iP);
             
         }
         if(cOpc=='A')
         {
             archivoLeer >> iD >> iP >> iM;
+            cout << "A " << iD << " " << iP << " " << iM;
+            cout << "Obtener la dirección real correspondiente a la dirección virtual " << iD << "del proceso " << iP << endl;
+
         }
         if(cOpc=='L')
         {
             archivoLeer >> iP;
+            cout << "L " << iP << endl;
+            cout << "Liberar los marcos de página ocupados por el proceso " << iP << endl;
             liberaProceso(iP);
         }
         if(cOpc=='F')
         {
-            
+            cout << 'F' << endl;
         }
         if(cOpc=='E')
         {
