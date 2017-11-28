@@ -19,6 +19,9 @@ int m[2048]={0};
 int iC=0;
 int iLibre=128;
 int iTimeStamp = 0;
+int iSwaps = 0;
+int iPageFaults = 0;
+
 unordered_map<int,int> fifoP;
 
 void imprimirMapa()
@@ -117,6 +120,7 @@ void swapFifo(int iN, int iP)
 {
     int temp;
     iC = ceil(iN/16.0);
+   
     for(int i=0;i<iC;i++)
     {
         if((swa[i]==0)&&iC>0)
@@ -124,6 +128,7 @@ void swapFifo(int iN, int iP)
             temp = fifoP.begin()->second;
             swa[i]=temp;
             iC--;
+            iSwaps++;
         }
     }
     iLibre -= iC;
@@ -133,6 +138,7 @@ void swapFifo(int iN, int iP)
 void colocarProceso(int iN, int iP)
 {
     iC = ceil(iN/16.0);
+    iTimeStamp += iC;
     int n = iN;
 
     if(iLibre >= iC)
@@ -226,7 +232,6 @@ void iniciarArchivo()
             cout << "P " << iN << " " << iP << endl;
             cout << "Asignar " << iN << " bytes al proceso " << iP << endl;
             colocarProceso(iN, iP);
-            iTimeStamp += iN;
         }
         if(cOpc=='A')
         {
