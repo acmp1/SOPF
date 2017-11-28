@@ -64,6 +64,32 @@ int mostrarDireccionReal(int iP, int iD)
 
 void liberaProceso(int iP)
 {
+    
+    int temp, mayor;
+    int iC = 0;
+    int iC2 = 0;
+    int j;
+    for(j=0; j<128; j++)
+    {
+        if(mp[j] == iP)
+        {
+            if(iC==0)
+            {
+                temp = j;
+                iC++;
+            }
+            if(mp[j+1] != iP)
+            {
+                if(iC2==0)
+                {
+                    mayor = j;
+                    iC2++;
+                }
+            }
+        }
+    }
+    
+    cout << "Se liberan los marcos de página de memoria real: " << temp << " - " << mayor << endl;
     //Elimina proceso del arreglo
     for(int i=0;i<127;i++)
     {
@@ -74,6 +100,8 @@ void liberaProceso(int iP)
             fifoP.erase(i);
         }
     }
+    
+
 }
 
 
