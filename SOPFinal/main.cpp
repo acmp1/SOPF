@@ -237,7 +237,15 @@ void iniciarArchivo()
         {
             archivoLeer >> iD >> iP >> iM;
             cout << "A " << iD << " " << iP << " " << iM << endl;
-            cout << "Obtener la dirección real correspondiente a la dirección virtual " << iD << "del proceso " << iP << endl;
+            if(iM == 0)
+            {
+            cout << "Obtener la dirección real correspondiente a la dirección virtual " << iD << " del proceso " << iP << endl;
+            }
+            if(iM == 1)
+            {
+                cout << "Obtener la dirección real correspondiente a la dirección virtual " << iD << " del proceso " << iP << " y modificar dicha dirección" << endl;
+                cout << "Se modificó la dirección " << iD << " del proceso " << iP << endl;
+            }
             int result = mostrarDireccionReal(iP, iD);
             cout << "Dirección virtual: " << iD << " Direccion real: " << result << endl;
             iTimeStamp++;
