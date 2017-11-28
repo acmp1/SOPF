@@ -18,6 +18,7 @@ int mp[127]={0};
 int m[2048]={0};
 int iC=0;
 int iLibre=128;
+int iTimeStamp = 0;
 unordered_map<int,int> fifoP;
 
 void imprimirMapa()
@@ -188,6 +189,7 @@ void iniciarArchivo()
         {
             getline(archivoLeer,sReplica);
             cout << sReplica << endl;
+            iTimeStamp++;
             
         }
         if(cOpc=='P')
@@ -196,13 +198,16 @@ void iniciarArchivo()
             cout << "P " << iN << " " << iP << endl;
             cout << "Asignar " << iN << " bytes al proceso " << iP << endl;
             colocarProceso(iN, iP);
-            
+            iTimeStamp += iN;
         }
         if(cOpc=='A')
         {
             archivoLeer >> iD >> iP >> iM;
-            cout << "A " << iD << " " << iP << " " << iM;
+            cout << "A " << iD << " " << iP << " " << iM << endl;
             cout << "Obtener la dirección real correspondiente a la dirección virtual " << iD << "del proceso " << iP << endl;
+            int result = mostrarDireccionReal(iP, iD);
+            cout << "Dirección virtual: " << iD << " Direccion real: " << result << endl;
+            iTimeStamp++;
 
         }
         if(cOpc=='L')
@@ -210,6 +215,7 @@ void iniciarArchivo()
             archivoLeer >> iP;
             cout << "L " << iP << endl;
             cout << "Liberar los marcos de página ocupados por el proceso " << iP << endl;
+            iTimeStamp++;
             liberaProceso(iP);
         }
         if(cOpc=='F')
