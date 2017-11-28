@@ -68,7 +68,7 @@ int mostrarDireccionReal(int iP, int iD)
 void liberaProceso(int iP)
 {
     
-    int temp, mayor;
+    int temp = -1, mayor = -1;
     int iC = 0;
     int iC2 = 0;
     int j;
@@ -92,7 +92,10 @@ void liberaProceso(int iP)
         }
     }
     
-    cout << "Se liberan los marcos de página de memoria real: " << temp << " - " << mayor << endl;
+    if(temp != -1)
+    {
+        cout << "Se liberan los marcos de página de memoria real: " << temp << " - " << mayor << endl;
+    }
     //Elimina proceso del arreglo
     for(int i=0;i<127;i++)
     {
@@ -101,6 +104,43 @@ void liberaProceso(int iP)
             iLibre ++;
             mp[i]=0;
             fifoP.erase(i);
+        }
+    }
+    
+    temp = -1;
+    mayor = -1;
+    iC = 0; iC2 = 0;
+    // se liberan marcos de página del arreglo de swapping en caso de que el proceso se encuentre ahí
+    for(j=0; j<4096; j++)
+    {
+    
+        if(swa[j] == iP)
+        {
+            if(iC==0)
+            {
+                temp = j;
+                iC++;
+            }
+            if(swa[j+1] != iP)
+            {
+                if(iC2==0)
+                {
+                    mayor = j;
+                    iC2++;
+                }
+            }
+        }
+    }
+    if(temp != -1)
+    {
+        cout << "Se liberan los marcos " << temp << " - " << mayor << " del área de swapping" << endl;
+    }
+    
+    for(int i=0;i<4096;i++)
+    {
+        if(swa[i]==iP)
+        {
+            swa[i]=0;
         }
     }
     
@@ -176,7 +216,7 @@ void colocarProceso(int iN, int iP)
               //  cout <<
             //}
         //}
-        int temp, mayor;
+        int temp = -1, mayor = -1;
         int iC = 0;
         int iC2 = 0;
         int j;
@@ -199,6 +239,7 @@ void colocarProceso(int iN, int iP)
                 }
             }
         }
+        
         cout << "Se asignaron los marcos de página " << temp << " - " << mayor << " al proceso " << iP << endl;
         
     }
