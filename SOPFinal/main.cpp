@@ -9,7 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
-#include <vector>
+#include <unordered_map>
 
 using namespace std;
 
@@ -18,31 +18,61 @@ int mp[127]={0};
 int m[2048]={0};
 int iC=0;
 int iLibre=128;
-vector<pair<int,int>> fifoP;
+unordered_map<int,int> fifoP;
+
+void imprimirMapa()
+{
+    for(auto it = fifoP.begin(); it != fifoP.end(); ++it)
+    {
+        cout << " " << it->first << ":" << it->second << endl;
+    }
+}
+
+int mostrarDireccionReal(int iP, int iD)
+{
+    /*int aux=0;
+    aux = iD/16;
+    auto it = fifoP.end();
+    for(; it != fifoP.begin() && aux>0; --it)
+    {
+        if(iP == it->second)
+        {
+            aux--;
+        }
+    }
+    cout << "ALGO " << it->first*16 + iD%16 << endl;*/
+    int iContR = 0;
+    int iContP = 0;
+    for(int i = 0; i < 128; i++)
+    {
+        for(int j = 0; j < 16; j++)
+        {
+            if(iContP == iD)
+            {
+                return iContR;
+            }
+            iContR++;
+            if(mp[i] == iP)
+            {
+                iContP++;
+            }
+        }
+    }
+    return 0;
+}
 
 void liberaProceso(int iP)
 {
     //Elimina proceso del arreglo
-    int iTam = fifoP.size();
-    cout<< "iTam " << iTam << endl;
     for(int i=0;i<127;i++)
     {
         if(mp[i]==iP)
         {
+            iLibre ++;
             mp[i]=0;
+            fifoP.erase(i);
         }
     }
-    /*
-    //Elimina proceso del vector
-    for(int i=0;i<iTam;i++)
-    {
-        if(fifoP[i].first==iP)
-        {
-            cout << "first: " << fifoP[i].first << endl;
-            //fifoP.erase(fifoP.begin() + i-1);
-            //iLibre++;
-        }
-    }*/
 }
 
 
@@ -62,7 +92,7 @@ void swapFifo(int iN, int iP)
     {
         if((swa[i]==0)&&iC>0)
         {
-            temp = fifoP[0].first;
+            temp = fifoP.begin()->second;
             swa[i]=temp;
             iC--;
         }
@@ -74,6 +104,8 @@ void swapFifo(int iN, int iP)
 void colocarProceso(int iN, int iP)
 {
     iC = ceil(iN/16.0);
+    int n = iN;
+
     if(iLibre >= iC)
     {
         iLibre -= iC;
@@ -82,10 +114,58 @@ void colocarProceso(int iN, int iP)
             if(mp[i]==0&&iC>0)
             {
                 mp[i]=iP;
-                fifoP.push_back(make_pair(iP,i));
+                fifoP.insert(make_pair(i,iP));
                 iC--;
             }
         }
+        //cout << "Se asignaron los marcos de página " <<
+        for(int k = 0; k < 2048; k++) // llenamos la memoria
+        {
+            if(m[k] == 0 && n > 0)
+            {
+                m[k] = iP;
+                n--;
+                
+            }
+        }
+        //int aux = 0;
+    
+        //for(auto it = fifoP.begin(); it != fifoP.end(); ++it)
+        //{
+          //  if(iP == it->second)
+            //{
+              //  aux = it->first;
+            //}
+            //else
+            //{
+              //  cout <<
+            //}
+        //}
+        int temp, mayor;
+        int iC = 0;
+        int iC2 = 0;
+        int j;
+        for(j=0; j<128; j++)
+        {
+            if(mp[j] == iP)
+            {
+                if(iC==0)
+                {
+                    temp = j;
+                    iC++;
+                }
+                if(mp[j+1] != iP)
+                {
+                    if(iC2==0)
+                    {
+                        mayor = j;
+                        iC2++;
+                    }
+                }
+            }
+        }
+        cout << "Se asignaron los marcos de página " << temp << " - " << mayor << " al proceso " << iP << endl;
+        
     }
     else
     {
@@ -112,16 +192,25 @@ void iniciarArchivo()
         if(cOpc=='P')
         {
             archivoLeer >> iN >> iP;
+            cout << "P " << iN << " " << iP << endl;
+            cout << "Asignar " << iN << " bytes al proceso " << iP << endl;
             colocarProceso(iN, iP);
             
         }
         if(cOpc=='A')
         {
             archivoLeer >> iD >> iP >> iM;
+            cout << "A " << iD << " " << iP << " " << iM << endl;
+            cout << "Obtener la dirección real correspondiente a la dirección virtual " << iD << "del proceso " << iP << endl;
+            int result = mostrarDireccionReal(iP, iD);
+            cout << "Dirección virtual: " << iD << " Direccion real: " << result << endl;
+
         }
         if(cOpc=='L')
         {
             archivoLeer >> iP;
+            cout << "L " << iP << endl;
+            cout << "Liberar los marcos de página ocupados por el proceso " << iP << endl;
             liberaProceso(iP);
         }
         if(cOpc=='F')
@@ -131,6 +220,7 @@ void iniciarArchivo()
         if(cOpc=='E')
         {
             imprimirArreglo();
+            imprimirMapa();
         }
     }
     
