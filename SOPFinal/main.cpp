@@ -158,20 +158,29 @@ void imprimirArreglo()
 
 void swapFifo(int iN, int iP)
 {
-    int temp;
+    int index=0,temp3=0;
+    // Ingresa en el arreglo swap el proceso que no alcanza
     iC = ceil(iN/16.0);
-   
+    iLibre -= iC;
     for(int i=0;i<iC;i++)
     {
-        if((swa[i]==0)&&iC>0)
+        //Trae la última posición del mapa
+        unordered_map<int,int>::iterator lastElement;
+        for(auto it = fifoP.begin(); it != fifoP.end(); ++it)
         {
-            temp = fifoP.begin()->second;
-            swa[i]=temp;
-            iC--;
-            iSwaps++;
+            lastElement = it;
         }
+        
+        //Swap
+        swa[i]=iP;
+        index = lastElement->first;
+        temp3 = mp[index];
+        mp[index]=swa[i];
+        swa[i]=temp3;
+        fifoP.erase(index);
+        fifoP.insert(make_pair(index,iP));
+        iSwaps++;
     }
-    iLibre -= iC;
 }
 
 // Función que coloca un proceso en memoria ejecutable
@@ -203,19 +212,7 @@ void colocarProceso(int iN, int iP)
                 
             }
         }
-        //int aux = 0;
-    
-        //for(auto it = fifoP.begin(); it != fifoP.end(); ++it)
-        //{
-          //  if(iP == it->second)
-            //{
-              //  aux = it->first;
-            //}
-            //else
-            //{
-              //  cout <<
-            //}
-        //}
+
         int temp = -1, mayor = -1;
         int iC = 0;
         int iC2 = 0;
@@ -245,7 +242,9 @@ void colocarProceso(int iN, int iP)
     }
     else
     {
-        // swapFifo(iN,iP);
+        cout << "--FIFO--" << endl;
+        swapFifo(iN,iP);
+        imprimirArreglo();
     }
 }
 
