@@ -219,7 +219,7 @@ void colocarProceso(int iN, int iP)
     }
     cout << "Se asignaron los marcos de página " << temp << " - " << mayor << " al proceso " << iP << endl;
   }
-  //Si no hay espacio libre en el arreglo para colocar el proceso, se utiliza FIFO y LRU
+  //Si no hay espacio libre en el arreglo para colocar el proceso, se utiliza FIFO
   else
   {
     swapFifo(iN,iP);

@@ -147,8 +147,8 @@ void liberaProceso(int iP)
   }
 }
 
-//Funciona para realizar el swap con FIFO
-void swapFifo(int iN, int iP)
+//Funciona para realizar el swap con LRU
+void swapLru(int iN, int iP)
 {
   int index=0;
   int temp3=0;
@@ -219,10 +219,10 @@ void colocarProceso(int iN, int iP)
     }
     cout << "Se asignaron los marcos de página " << temp << " - " << mayor << " al proceso " << iP << endl;
   }
-  //Si no hay espacio libre en el arreglo para colocar el proceso, se utiliza FIFO y LRU
+  //Si no hay espacio libre en el arreglo para colocar el proceso, se utiliza LRU
   else
   {
-    swapFifo(iN,iP);
+    swapLru(iN,iP);
   }
 }
 
