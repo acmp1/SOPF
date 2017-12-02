@@ -222,9 +222,7 @@ void colocarProceso(int iN, int iP)
   //Si no hay espacio libre en el arreglo para colocar el proceso, se utiliza FIFO y LRU
   else
   {
-    // cout << "--FIFO--" << endl;
     swapFifo(iN,iP);
-    // imprimirArreglo();
   }
 }
 
