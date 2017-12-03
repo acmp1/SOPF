@@ -7,6 +7,7 @@ using namespace std;
 
 //Declaracion de variables globales
 unordered_map<int,int> fifoP;
+unordered_map<int,int> timestamp;
 int swa[4096]={0};
 int mp[127]={0};
 int m[2048]={0};
@@ -165,7 +166,7 @@ void swapFifo(int iN, int iP)
     swa[i]=temp3;
     fifoP.erase(index);
     fifoP.insert(make_pair(index,iP));
-    iSwaps++;
+    iSwaps+=2;
   }
 }
 
@@ -173,7 +174,7 @@ void swapFifo(int iN, int iP)
 void colocarProceso(int iN, int iP)
 {
   iC = ceil(iN/16.0);
-  iTimeStamp += iC;
+  timestamp.insert(make_pair(iP,iC));
   int n = iN;
 
   //Si hay espacio libre en el arreglo para colocar el proceso
@@ -256,15 +257,32 @@ void caseA(int iD, int iP, int iM)
   }
   int result = mostrarDireccionReal(iP, iD);
   cout << "Dirección virtual: " << iD << " Direccion real: " << result << endl;
-  iTimeStamp++;
+    int auxTS = timestamp[iP];
+    timestamp[iP]=auxTS+1;
 }
 
 void caseL(int iP)
 {
   cout << "L " << iP << endl;
   cout << "Liberar los marcos de página ocupados por el proceso " << iP << endl;
-  iTimeStamp++;
+    int auxTS = timestamp[iP];
+    timestamp[iP]=auxTS+1;
   liberaProceso(iP);
+}
+
+void caseF()
+{
+    int iCount = 0;
+    int iSuma = 0;
+    cout << "Turnaround por proceso: " << endl;
+    for(auto it = timestamp.begin(); it != timestamp.end(); ++it)
+    {
+        cout << "Nombre del proceso: " << it->first << " Turnaround: " << it->second << endl;
+        iCount++;
+        iSuma+=it->second;
+    }
+    cout << "Turnaround promedio: " << iSuma/(iCount*1.0) << endl;
+    cout << "Swaps general: " <<  iSwaps << endl;
 }
 
 int main()
@@ -285,7 +303,6 @@ int main()
       case 'C':
         getline(archivoLeer,sReplica);
         cout << sReplica << endl;
-        iTimeStamp++;
         break;
 
       case 'P':
@@ -305,6 +322,7 @@ int main()
 
       case 'F':
         cout << 'F' << endl;
+        caseF();
         break;
 
       case 'E':
