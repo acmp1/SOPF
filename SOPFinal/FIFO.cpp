@@ -173,6 +173,18 @@ void swapFifo(int iN, int iP)
   }
 }
 
+bool procesoEnMemoria(int iP)
+{
+  for(int i = 0; i < 3; i ++)
+  {
+    if(mp[i] == iP)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 //Funcion para colocar un proceso
 void colocarProceso(int iN, int iP)
 {
@@ -231,7 +243,10 @@ void caseP(int iN, int iP)
 {
   cout << "P " << iN << " " << iP << endl;
   cout << "Asignar " << iN << " bytes al proceso " << iP << endl;
-  colocarProceso(iN, iP);
+  if(procesoEnMemoria(iP))
+  {
+    colocarProceso(iN, iP);
+  }
 }
 
 void caseA(int iD, int iP, int iM)
