@@ -7,11 +7,11 @@ using namespace std;
 
 //Declaracion de variables globales
 unordered_map<int,int> fifoP;
-int swa[6]={0};
-int mp[3]={0};
+int swa[256]={0};
+int mp[128]={0};
 int iPageFaults = 0;
 int iTimeStamp = 0;
-int iLibre=3;
+int iLibre=128;
 int iSwaps = 0;
 int iC=0;
 
@@ -19,7 +19,7 @@ int iC=0;
 void imprimirArreglo()
 {
   cout << "--ARREGLO--" << endl;
-  for(int i=0;i<3;i++)
+  for(int i=0;i<128;i++)
   {
     cout << " " << mp[i] << endl;
   }
@@ -28,7 +28,7 @@ void imprimirArreglo()
 void imprimirSwap()
 {
   cout << "--SWAP ARRAY--" << endl;
-  for(int i = 0; i<6; i++)
+  for(int i = 0; i<256; i++)
   {
     cout << " " << swa[i] << endl;
   }
@@ -48,7 +48,7 @@ int mostrarDireccionReal(int iP, int iD)
 {
   int iContR = 0;
   int iContP = 0;
-  for(int i = 0; i < 3; i++)
+  for(int i = 0; i < 128; i++)
   {
     for(int j = 0; j < 16; j++)
     {
@@ -74,7 +74,7 @@ void liberaProceso(int iP)
   int iC = 0;
   int iC2 = 0;
   int j;
-  for(j=0; j<3; j++)
+  for(j=0; j<128; j++)
   {
     if(mp[j] == iP)
     {
@@ -99,7 +99,7 @@ void liberaProceso(int iP)
   }
 
   //Elimina proceso del arreglo
-  for(int i=0;i<3;i++)
+  for(int i=0;i<128;i++)
   {
     if(mp[i]==iP)
     {
@@ -175,7 +175,7 @@ void swapFifo(int iN, int iP)
 
 bool procesoEnMemoria(int iP)
 {
-  for(int i = 0; i < 3; i ++)
+  for(int i = 0; i < 128; i ++)
   {
     if(mp[i] == iP)
     {
@@ -196,7 +196,7 @@ void colocarProceso(int iN, int iP)
   if(iLibre >= iC)
   {
     iLibre -= iC;
-    for(int i=0;i<3;i++)
+    for(int i=0;i<128;i++)
     {
       if(mp[i]==0&&iC>0)
       {
